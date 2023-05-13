@@ -30,10 +30,21 @@ while True:
     # Single row, single column
     X = X.reshape(1, X.shape[0])
     # Convert to a torch tensor
-    X = torch.from_numpy()
+    X = torch.from_numpy(X)
     
     output = model(X)
     _, predicted = torch.max(output, dim = 1)
     # predicted.item() is the class label
     # tag will be the tag that we store such as 'greeting'
     tag = TAGS[predicted.item()]
+
+    # Check if probability for tag is high enough using softmax
+    probability = torch.softmax(output, dim = 1)
+    actual_probability_for_tag = probability[0][predicted.item()]
+
+    if actual_probability_for_tag.item() > 0.75:
+        for intent in intents["intents"]:
+            if tag == intent["tag"]:
+                print(f"{BOT_NAME}: {random.choice(intent['responses'])}")
+    else:
+        print(f"{BOT_NAME}: I do not understand ...")
