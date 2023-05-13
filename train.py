@@ -58,7 +58,7 @@ class ChatDataset(Dataset):
 BATCH_SIZE, HIDDEN_SIZE, OUTPUT_SIZE, INPUT_SIZE, LEARNING_RATE, NUM_EPOCHS = 8, 8, len(tags), len(X_train[0]), 0.001, 1000
 
 dataset = ChatDataset()
-train_loader = DataLoader(dataset = dataset, batch_size = BATCH_SIZE, shuffle = True, num_workers = 2)
+train_loader = DataLoader(dataset = dataset, batch_size = BATCH_SIZE, shuffle = True, num_workers = 0)
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = NeuralNet(INPUT_SIZE, HIDDEN_SIZE, OUTPUT_SIZE).to(device)
 
@@ -69,8 +69,18 @@ optimizer = torch.optim.Adam(model.parameters(), lr = LEARNING_RATE)
 for epoch in range(NUM_EPOCHS):
     for (words, labels) in train_loader:
         words = words.to(device)
-        labels = labels.to(device)
+        labels = labels.to(dtype = torch.long).to(device)
 
         # Forward
         outputs = model(words)
-        
+        loss = criterion(outputs, labels)
+
+        # Backward and optimizer step
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+    if (epoch + 1) % 100 == 0:
+        print(f'epoch {epoch + 1} / {NUM_EPOCHS}, loss = {loss.item():.4f}')
+    
+print(f'final loss, loss = {loss.item():.4f}')
