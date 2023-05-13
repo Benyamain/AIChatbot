@@ -16,15 +16,9 @@ model = NeuralNet(INPUT_SIZE, HIDDEN_SIZE, OUTPUT_SIZE).to(device)
 # Knows our learned parameters
 model.load_state_dict(MODEL_STATE)
 model.eval()
-print("Let's chat! Type 'quit' to exit ...")
 
-while True:
-    sentence = input('You: ')
-
-    if sentence == 'quit':
-        break
-
-    sentence = tokenize(sentence)
+def get_response(message):
+    sentence = tokenize(message)
     # Numpy array
     X = bag_of_words(sentence, ALL_WORDS)
     # Single row, single column
@@ -45,6 +39,6 @@ while True:
     if actual_probability_for_tag.item() > 0.75:
         for intent in intents["intents"]:
             if tag == intent["tag"]:
-                print(f"{BOT_NAME}: {random.choice(intent['responses'])}")
-    else:
-        print(f"{BOT_NAME}: I do not understand ...")
+                return random.choice(intent['responses'])
+            
+    return "I do not understand ..."
