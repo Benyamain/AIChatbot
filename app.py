@@ -42,7 +42,41 @@ class ChatApplication:
         bottom_label = Label(self.window, bg = BG_GRAY, height = 80)
         bottom_label.place(relwidth = 1, rely = 0.825)
 
+        # Message entry box
+        self.message_entry = Entry(bottom_label, bg = "#2C3E50", fg = TEXT_COLOR, font = FONT)
+        self.message_entry.place(relwidth = 0.74, relheight = 0.06, rely = 0.008, relx = 0.011)
+        # When application starts, it already is in focus
+        self.message_entry.focus()
+        self.message_entry.bind("<Return>", self._on_enter_pressed)
+
+        # Send button
+        send_button = Button(bottom_label, text = "Send", font = FONT_BOLD, width = 20, bg = BG_GRAY, command = lambda: self._on_enter_pressed(None))
+        send_button.place(relx = 0.77, rely = 0.008, relheight = 0.06, relwidth = 0.22)
+
+    def _on_enter_pressed(self, event):
+        message = self.message_entry.get()
+        self._insert_message(message, "You")
+
+    def _insert_message(self, message, sender):
+        # Hit enter without putting any text in it
+        if not message:
+            return
         
+        self.message_entry.delete(0, END)
+        message_1 = f"{sender}: {message}\n\n"
+        # Once user can type in and sends a message, disable it again
+        self.text_widget.configure(state = NORMAL)
+        self.text_widget.insert(END, message_1)
+        self.text_widget.configure(state = DISABLED)
+
+        message_2 = f"{BOT_NAME}: {get_response(message)}\n\n"
+        # Once user can type in and sends a message, disable it again
+        self.text_widget.configure(state = NORMAL)
+        self.text_widget.insert(END, message_2)
+        self.text_widget.configure(state = DISABLED)
+
+        # Scroll to the end to see the last message
+        self.text_widget.see(END)
     
 if __name__ == '__main__':
     app = ChatApplication()
