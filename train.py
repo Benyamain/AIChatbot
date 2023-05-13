@@ -55,7 +55,7 @@ class ChatDataset(Dataset):
     
 # Hyperparameters
 # The first bag of words since they all have the same size
-BATCH_SIZE, HIDDEN_SIZE, OUTPUT_SIZE, INPUT_SIZE, LEARNING_RATE, NUM_EPOCHS = 8, 8, len(tags), len(X_train[0]), 0.001, 1000
+BATCH_SIZE, HIDDEN_SIZE, OUTPUT_SIZE, INPUT_SIZE, LEARNING_RATE, NUM_EPOCHS, FILE = 8, 8, len(tags), len(X_train[0]), 0.001, 1000, "data.pth"
 
 dataset = ChatDataset()
 train_loader = DataLoader(dataset = dataset, batch_size = BATCH_SIZE, shuffle = True, num_workers = 0)
@@ -84,3 +84,7 @@ for epoch in range(NUM_EPOCHS):
         print(f'epoch {epoch + 1} / {NUM_EPOCHS}, loss = {loss.item():.4f}')
     
 print(f'final loss, loss = {loss.item():.4f}')
+
+data = {"model_state": model.state_dict(), "input_size": INPUT_SIZE, "output_size": OUTPUT_SIZE, "hidden_size": HIDDEN_SIZE, "all_words": all_words, "tags": tags}
+torch.save(data, FILE)
+print(f'Training complete! File saved to {FILE}')
