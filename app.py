@@ -1,5 +1,6 @@
 from tkinter import *
 from chat import get_response, BOT_NAME
+import time
 
 BG_GRAY, BG_COLOR, TEXT_COLOR, FONT, FONT_BOLD = "#ABB2B9", "#17202A", "#EAECEE", "Helvetica 14", "Helvetica 13 bold"
 
@@ -69,6 +70,9 @@ class ChatApplication:
         self.text_widget.insert(END, message_1)
         self.text_widget.configure(state = DISABLED)
 
+        self.window.after(1500, self._send_response, message)
+
+    def _send_response(self, message):
         message_2 = f"{BOT_NAME}: {get_response(message)}\n\n"
         # Once user can type in and sends a message, disable it again
         self.text_widget.configure(state = NORMAL)
