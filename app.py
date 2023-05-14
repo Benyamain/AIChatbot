@@ -20,7 +20,7 @@ class ChatApplication:
         self.window.configure(width = 470, height = 550, bg = BG_COLOR)
 
         # Head label
-        head_label = Label(self.window, bg = BG_COLOR, fg = TEXT_COLOR, text = "Welcome", font = FONT_BOLD, pady = 10)
+        head_label = Label(self.window, bg = BG_COLOR, fg = TEXT_COLOR, text = "Coffee Shop", font = FONT_BOLD, pady = 10)
         head_label.place(relwidth = 1)
 
         # Tiny divider
